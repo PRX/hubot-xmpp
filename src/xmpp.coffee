@@ -49,6 +49,16 @@ class XmppBot extends Adapter
   online: =>
     @robot.logger.info 'Hubot XMPP client online'
 
+    # @getRoster
+
+    @client.addListener('rawStanza', this.onRawStanza)
+
+    @client.send do =>
+      el = new Xmpp.Element('iq', from: @options.username, type: 'get', id: 'roster_1')
+      q = el.c('query', xmlns: 'jabber:iq:roster')
+
+      return el
+
     @client.send new Xmpp.Element('presence')
     @robot.logger.info 'Hubot XMPP sent initial presence'
 
@@ -60,6 +70,20 @@ class XmppBot extends Adapter
     , @options.keepaliveInterval
 
     @emit 'connected'
+
+  onRawStanza: (stanza) =>
+    if stanza.name == 'iq'
+      if stanza.attrs
+        if stanza.attrs.id == 'roster_1'
+          if stanza.children
+            if stanza.children[0]
+              if stanza.children[0]['children']
+                roster_items = stanza.children[0]['children']
+                clientRosterItems = []
+
+                for item in roster_items
+                  jid = new Xmpp.JID(item.attrs.jid)
+                  @robot.xmppRoster.push(jid)
 
   parseRooms: (items) ->
     rooms = []
