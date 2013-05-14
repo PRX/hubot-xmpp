@@ -10,7 +10,7 @@ class XmppBot extends Adapter
       password: process.env.HUBOT_XMPP_PASSWORD
       host: process.env.HUBOT_XMPP_HOST
       port: process.env.HUBOT_XMPP_PORT
-      rooms:    @parseRooms process.env.HUBOT_XMPP_ROOMS.split(',')
+      rooms:    @parseRooms process.env.HUBOT_XMPP_ROOMS
       keepaliveInterval: 30000 # ms interval to send whitespace to xmpp server
       legacySSL: process.env.HUBOT_XMPP_LEGACYSSL
       preferredSaslMechanism: process.env.HUBOT_XMPP_PREFERRED_SASL_MECHANISM
@@ -63,11 +63,12 @@ class XmppBot extends Adapter
 
   parseRooms: (items) ->
     rooms = []
-    for room in items
-      index = room.indexOf(':')
-      rooms.push
-        jid:      room.slice(0, if index > 0 then index else room.length)
-        password: if index > 0 then room.slice(index+1) else false
+    if items
+      for room in items.split(',')
+        index = room.indexOf(':')
+        rooms.push
+          jid:      room.slice(0, if index > 0 then index else room.length)
+          password: if index > 0 then room.slice(index+1) else false
     return rooms
 
   # XMPP Joining a room - http://xmpp.org/extensions/xep-0045.html#enter-muc
