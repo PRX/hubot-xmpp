@@ -85,6 +85,7 @@ class XmppBot extends Adapter
                 clientRosterItems = []
 
                 for item in roster_items
+                  console.log "Will relay messages to #{item.attrs.jid}"
                   jid = new Xmpp.JID(item.attrs.jid)
                   @robot.xmppRoster.push(jid)
 
