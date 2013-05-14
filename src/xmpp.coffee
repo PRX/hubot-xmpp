@@ -31,6 +31,9 @@ class XmppBot extends Adapter
 
     @options = options
 
+    @robot.xmppClient = @client
+    @robot.xmppRoster = []
+
   error: (error) =>
     if error.code == "ECONNREFUSED"
       @robot.logger.error "Connection refused, exiting"
