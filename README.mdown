@@ -1,8 +1,12 @@
 ## Hubot XMPP
 
-Connects Hubot to your XMPP network 
+Connects Hubot to your XMPP network
 
 [![Build Status](https://secure.travis-ci.org/markstory/hubot-xmpp.png?branch=master)](http://travis-ci.org/markstory/hubot-xmpp)
+
+### Roster support
+
+This fork is designed to support XMPP account rosters. When the client comes online, it will request `roster_1`, and load all the items ("friends") into an array called `@robot.xmppRoster`. Hubot scripts will then have access to that list of contacts. This list does not get updated after connecting, so if a new contact is added, the client will need to reconnect.
 
 ### Setup
 
